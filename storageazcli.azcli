@@ -1,0 +1,54 @@
+#
+az login 
+#list all azure accounts
+az account list -o table
+
+#set subscription
+az account set --subscription "AzurePass"
+
+#Get all resource groups
+az group list
+
+az group list --query [].name
+
+#Variable 
+$rgName = 'rg-armtemplates'
+$location = 'Central India'
+
+#create resource group
+az group create `
+    --name $rgName `
+    --location $location
+
+az group list --query [].name
+
+# create blank template 
+$templateFile = 'adatumazuretemplete.json'
+$templateName = 'blanktemplate'
+
+az group deployment create `
+    --name $templateName `
+    --resource-group $rgName `
+    --template-file $templateFile
+
+#delete a group
+#az group delete --name $rgName --no-wait --yes
+
+$templateFile = 'adatumazuretemplete.json'
+$templateName = 'variablestemplate'
+$storageName = 'adatumstorage33'
+$storagePrefix='adatum'
+
+
+
+
+#create a storage account using the vraiable template
+az group deployment create `
+    --name $templateName `
+    --resource-group $rgName `
+    --template-file $templateFile `
+    --parameters storagePrefix=$storagePrefix
+
+#delete a group
+az group delete --name $rgName --no-wait --yes
+
